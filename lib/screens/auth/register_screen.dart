@@ -55,6 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (response.user != null && mounted) {
         // Registration successful, navigate to home
+        // TODO: Add profiles table insertion with RLS later
         Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {

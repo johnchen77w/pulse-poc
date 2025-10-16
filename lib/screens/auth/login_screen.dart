@@ -44,7 +44,8 @@ class LoginScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // TODO: Implement Supabase authentication
-                // TODO: Navigate to home screen on success
+                // For now, navigate directly to home screen
+                Navigator.pushReplacementNamed(context, '/home');
               },
               child: const Text('Login', style: TextStyle(fontSize: 20)),
             ),

@@ -61,7 +61,8 @@ class RegisterScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // TODO: Implement Supabase user registration
-                // TODO: Navigate to home screen on success
+                // For now, navigate directly to home screen
+                Navigator.pushReplacementNamed(context, '/home');
               },
               child: const Text('Register', style: TextStyle(fontSize: 20)),
             ),

@@ -35,7 +35,8 @@ class QuestionScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // TODO: Save reflection to Supabase
-                // TODO: Navigate to home or summary screen
+                // For now, navigate back to home screen
+                Navigator.pop(context);
               },
               child: const Text('Submit', style: TextStyle(fontSize: 20)),
             ),

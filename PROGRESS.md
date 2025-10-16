@@ -2,9 +2,31 @@
 
 **Last Updated:** October 16, 2025
 
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Completed Work](#-completed-work)
+- [Current State](#-current-state)
+- [Project Structure](#-project-structure)
+- [What's NOT Done Yet](#-whats-not-done-yet)
+- [Git Commit History](#-git-commit-history)
+- [Recommended Next Steps](#-recommended-next-steps)
+- [Technical Notes](#-technical-notes)
+- [Key Achievements](#-key-achievements)
+
 ## Project Overview
 
 **Pulse** is a Flutter mobile app for seniors (65+) to perform daily emotional check-ins, receive AI-generated summaries, and optionally share weekly updates with family members. Currently in POC stage.
+
+### Tech Stack
+
+| Component | Technology | Notes |
+|-----------|-----------|-------|
+| **Frontend** | Flutter (Dart) | Cross-platform mobile |
+| **Backend** | **Supabase** | Auth, DB, Edge Functions |
+| **AI Summaries** | **OpenAI GPT-4o-mini** | Cost-effective for POC |
+| **Email** | **SendGrid** | Weekly family updates |
+| **Hosting** | Supabase | Serverless backend |
 
 ---
 
@@ -61,7 +83,7 @@ Login ↔ Register (bidirectional)
 ### 5. Supabase Integration
 
 **Core Infrastructure:**
-- `lib/services/supabase_client_manager.dart` - Singleton manager for Supabase client
+- `lib/services/supabase_client_manager.dart` - Singleton manager for **Supabase** client
   - Comprehensive usage documentation in code comments
   - Convenience getters for `client` and `auth`
   - Initialized in `main()` before app launch
@@ -79,6 +101,12 @@ Login ↔ Register (bidirectional)
 - Project URL: `https://vusrrkxgpaulflzoimfr.supabase.co`
 - Anon key integrated (hardcoded for POC)
 - Debug mode enabled for development
+
+**Key Decisions:**
+- ✅ **Supabase for backend** - Chosen for integrated auth, DB, and Edge Functions
+- ✅ **Flutter for frontend** - Cross-platform support for iOS/Android
+- 🔜 **OpenAI GPT-4o-mini** - Cost-effective AI for summary generation
+- 🔜 **SendGrid** - Reliable email delivery for family updates
 
 **Dependencies Added:**
 - `supabase_flutter: ^2.5.0`
@@ -196,28 +224,28 @@ c9df83a - Add comprehensive CLAUDE.md documentation
 
 ## 🎯 Recommended Next Steps
 
-### Option 1: Complete Data Layer
+### Option 1: [Complete Data Layer](#backend--database)
 
-1. Create `profiles` table in Supabase with RLS
+1. Create `profiles` table in **Supabase** with RLS
 2. Create `reflections` table for daily check-ins
 3. Implement data persistence in question_screen.dart
 4. Create Dart models (`User`, `Reflection`, `Summary`)
 
-### Option 2: AI Integration
+### Option 2: [AI Integration](#backend--database)
 
-1. Add OpenAI API integration
+1. Add **OpenAI GPT-4o-mini** API integration
 2. Create prompt templates for summaries
-3. Set up Supabase Edge Function for nightly summary generation
+3. Set up **Supabase Edge Function** for nightly summary generation
 4. Display summaries in summary_screen.dart
 
-### Option 3: UI Polish
+### Option 3: [UI Polish](#uiux-enhancements)
 
 1. Create senior-friendly custom theme
 2. Build reusable large button widget
 3. Add app logo and branding
 4. Improve accessibility features
 
-### Option 4: Essential Features
+### Option 4: [Essential Features](#features)
 
 1. Implement logout functionality
 2. Add reflection history view on home screen
@@ -230,7 +258,7 @@ c9df83a - Add comprehensive CLAUDE.md documentation
 
 ### Important Considerations:
 
-- Supabase email confirmation may be enabled by default - disable for easier testing
+- **Supabase** email confirmation may be enabled by default - disable for easier testing
 - User metadata (name, age) is stored in `auth.users.raw_user_meta_data`
 - No profiles table yet means user data only exists in Auth
 - All screens use StatefulWidget for proper state management
@@ -244,6 +272,13 @@ flutter run           # Launch on emulator
 ```
 
 **Note:** Hot restart (not just hot reload) after `main.dart` changes.
+
+### Future Documentation Plans:
+
+As features expand (AI summaries with **OpenAI GPT-4o-mini**, **SendGrid** integration, etc.), consider:
+- Creating `TECH.md` for detailed technical specifications
+- Using `/docs/` directory for architecture diagrams and API documentation
+- Splitting database schema into separate `DATABASE.md`
 
 ---
 

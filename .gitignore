@@ -1,0 +1,21 @@
+# Flutter & Dart
+build/
+.dart_tool/
+.packages
+.pub-cache/
+flutter_*.png
+flutter_export_environment.sh
+
+# IDEs
+*.iml
+.idea/
+.vscode/
+
+# Environment
+.env
+.env.*
+secrets.json
+
+# Misc
+pubspec.lock
+

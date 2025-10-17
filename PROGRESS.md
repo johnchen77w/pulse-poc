@@ -111,6 +111,52 @@ Login ↔ Register (bidirectional)
 **Dependencies Added:**
 - `supabase_flutter: ^2.5.0`
 
+### 6. Reflection Data Model & Features
+
+**Data Model:**
+- `lib/models/reflection.dart` - Complete Reflection model
+  - `questionText` field (required) - Stores the prompt shown to user
+  - `content` field - User's written reflection
+  - `mood` field (optional) - Emoji mood selection
+  - `toMap()` and `fromMap()` for **Supabase** integration
+  - `copyWith()` for immutability
+
+**Question Screen Enhancements:**
+- ✅ Dynamic question system with 8 senior-friendly prompts
+- ✅ "New Question" button - Randomly selects different question
+- ✅ "Skip" button - Returns home without saving reflection
+- ✅ Emoji mood selector (😄 😐 😢 😠 😴) below text input
+- ✅ Keyboard-aware scrolling with `SingleChildScrollView`
+- ✅ Question text stored with each reflection in **Supabase**
+- ✅ Senior-friendly layout: Question → Text → Emojis → Skip/Submit
+
+**Summary Screen Features:**
+- ✅ Loads past 10 reflections from **Supabase** (ordered by date)
+- ✅ Q&A format display:
+  - Date shown as "Today", "Yesterday", or full date
+  - "Q: {question}" in blue bold (16pt)
+  - "A: {answer}" in normal text (16pt)
+  - Mood emoji if selected (20pt)
+- ✅ Card-based layout with proper spacing
+- ✅ Loading, error, and empty states handled
+- ✅ "Back to Home" navigation button
+
+**Database Schema:**
+```sql
+CREATE TABLE reflections (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  question_text TEXT NOT NULL,
+  mood TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+**RLS Policies:**
+- Users can INSERT their own reflections
+- Users can SELECT their own reflections
+
 ---
 
 ## 🎯 Current State
@@ -118,19 +164,30 @@ Login ↔ Register (bidirectional)
 ### What Works:
 
 1. ✅ App launches successfully on iOS emulator
-2. ✅ Users can register new accounts (saved to Supabase Auth)
+2. ✅ Users can register new accounts (saved to **Supabase** Auth)
 3. ✅ Users can login with existing credentials
-4. ✅ Navigation between all screens works smoothly
-5. ✅ All buttons are functional (no dead clicks)
-6. ✅ User data persists in Supabase
+4. ✅ Users can submit daily reflections with mood and question
+5. ✅ Dynamic question generation from 8 prompts
+6. ✅ Skip button - users can skip without submitting
+7. ✅ Past reflections displayed in Q&A format
+8. ✅ Navigation between all screens works smoothly
+9. ✅ All buttons are functional (no dead clicks)
+10. ✅ User data persists in **Supabase**
 
 ### User Flow (End-to-End):
 
 1. Launch app → Login screen appears
-2. New users: Register → Fill form → Create account in Supabase → Navigate to Home
+2. New users: Register → Fill form → Create account in **Supabase** → Navigate to Home
 3. Existing users: Login → Authenticate → Navigate to Home
 4. Home screen → "Start Daily Check-in" → Question screen
-5. Question screen → Enter reflection → Submit → Back to Home
+5. Question screen:
+   - See random question from pool
+   - Tap "New Question" to get different prompt (optional)
+   - Write reflection in text field
+   - Select mood emoji (optional)
+   - Tap "Skip" to cancel OR "Submit" to save
+6. After submit → Navigate to Home → Success message shown
+7. Home → Navigate to Summary → View past reflections in Q&A format
 
 ---
 
@@ -140,17 +197,19 @@ Login ↔ Register (bidirectional)
 lib/
 ├── main.dart                           # Entry point + Supabase init
 ├── app.dart                            # MaterialApp + routing
+├── models/
+│   └── reflection.dart                # ✅ Complete data model
 ├── screens/
 │   ├── auth/
 │   │   ├── login_screen.dart          # ✅ Supabase auth
 │   │   └── register_screen.dart       # ✅ Supabase auth
 │   ├── home_screen.dart               # ⚠️ Placeholder UI
-│   ├── question_screen.dart           # ⚠️ No data persistence
-│   ├── summary_screen.dart            # ⚠️ Placeholder UI
+│   ├── question_screen.dart           # ✅ Full features (mood, questions, skip)
+│   ├── summary_screen.dart            # ✅ Q&A display, Supabase integration
 │   └── settings_screen.dart           # ⚠️ Placeholder UI
 ├── services/
 │   └── supabase_client_manager.dart   # ✅ Complete
-└── (models/, widgets/, utils/ - not created yet)
+└── (widgets/, utils/ - not created yet)
 
 assets/
 ├── images/  (empty)
@@ -163,25 +222,26 @@ assets/
 
 ### Backend & Database
 
-- [ ] Profiles table in Supabase (deferred for later)
-- [ ] Row-Level Security (RLS) policies (deferred for later)
-- [ ] Daily reflections table
-- [ ] Summaries table
-- [ ] OpenAI GPT-4o-mini integration
-- [ ] SendGrid email delivery
-- [ ] Supabase Edge Functions (cron jobs)
+- [ ] Profiles table in **Supabase** (deferred for later)
+- [x] ~~Daily reflections table~~ - **COMPLETE** with RLS policies
+- [ ] Summaries table for AI-generated content
+- [ ] **OpenAI GPT-4o-mini** integration for AI summaries
+- [ ] **SendGrid** email delivery
+- [ ] **Supabase** Edge Functions (cron jobs)
 - [ ] Environment variables (.env file)
 
 ### Features
 
-- [ ] Actual data persistence for reflections
-- [ ] AI summary generation (nightly cron)
-- [ ] Weekly family emails
+- [x] ~~Actual data persistence for reflections~~ - **COMPLETE**
+- [x] ~~Reflection history view~~ - **COMPLETE** (Q&A format)
+- [x] ~~Mood tracking~~ - **COMPLETE** (emoji selector)
+- [x] ~~Dynamic question generation~~ - **COMPLETE** (8 prompts)
+- [ ] AI summary generation (nightly cron with **OpenAI GPT-4o-mini**)
+- [ ] Weekly family emails via **SendGrid**
 - [ ] Push notifications for daily check-ins
 - [ ] User profile management in Settings
 - [ ] Logout functionality
 - [ ] Family email preferences toggle
-- [ ] Reflection history view
 
 ### UI/UX Enhancements
 
@@ -205,6 +265,9 @@ assets/
 ## 📊 Git Commit History
 
 ```
+d8f8f0f - Add reflection model, Skip/New Question buttons, and Q&A display
+e1f2f3f - Enhance PROGRESS.md with internal links and bold tech decisions
+3604671 - Add PROGRESS.md with complete project summary
 f78cd89 - Add TODO for profiles table integration
 af7de90 - Add Supabase authentication integration
 054ba7b - Add navigation handlers for auth and check-in screens
@@ -215,10 +278,13 @@ c9df83a - Add comprehensive CLAUDE.md documentation
 ```
 
 **Total Stats:**
-- 7 commits
-- ~800+ lines of Dart code
-- 5 complete screens
+- 10 commits
+- ~1,200+ lines of Dart code
+- 1 data model (Reflection)
+- 6 screens (2 auth, 4 main)
 - Full authentication system working
+- Daily reflection submission with mood tracking
+- Past reflections Q&A display
 
 ---
 
